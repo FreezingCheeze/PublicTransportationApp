@@ -10,6 +10,9 @@ public class PuTraCommands {
         String destination
     ) {
         TripTask task = new TripTask();
+        task.setDeparture(departure);
+        task.setDestination(destination);
+
 
         return "Calculating trip";
     }
