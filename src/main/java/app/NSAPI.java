@@ -28,11 +28,11 @@ public class NSAPI {
         private int plannedDurationInMinutes;
         private int transfers;
         private String status;
-        private Leg[] legs;
+        private List<Leg> legs;
         private String crowdForecast;
         private boolean optimal;
 
-        public Trip(String uid, int plannedDurationInMinutes, int transfers, String status, Leg[] legs, String crowdForecast, boolean optimal) {
+        public Trip(String uid, int plannedDurationInMinutes, int transfers, String status, List<Leg> legs, String crowdForecast, boolean optimal) {
             this.uid = uid;
             this.plannedDurationInMinutes = plannedDurationInMinutes;
             this.status = status;
@@ -44,14 +44,15 @@ public class NSAPI {
 
         @Override
         public String toString() {
-            return "Trip{" +
+            return "\nTrip{" +
                     "\nuid='" + uid + '\'' +
                     ", \nplannedDurationInMinutes=" + plannedDurationInMinutes +
                     ", \ntransfers=" + transfers +
                     ", \nstatus='" + status + '\'' +
+                    ", \nlegs=" + legs +
                     ", \ncrowdForecast='" + crowdForecast + '\'' +
                     ", \noptimal=" + optimal +
-                    '}';
+                    "\n}";
         }
     }
 
@@ -62,15 +63,57 @@ public class NSAPI {
         private String productNumber;
         private String productType;
         private String productDisplayName;
-        private Stop[] stops;
+        private List<Stop> stops;
         private String crowdForecast;
+
+        public Leg(String idx, String name, String direction, String productNumber, String productType, String productDisplayName, List<Stop> stops, String crowdForecast) {
+            this.idx = idx;
+            this.name = name;
+            this.direction = direction;
+            this.productNumber = productNumber;
+            this.productType = productType;
+            this.productDisplayName = productDisplayName;
+            this.stops = stops;
+            this.crowdForecast = crowdForecast;
+        }
+
+        @Override
+        public String toString() {
+            return "\n\tLeg{" +
+                    "\n\tidx='" + idx + '\'' +
+                    ", \n\tname='" + name + '\'' +
+                    ", \n\tdirection='" + direction + '\'' +
+                    ", \n\tproductNumber='" + productNumber + '\'' +
+                    ", \n\tproductType='" + productType + '\'' +
+                    ", \n\tproductDisplayName='" + productDisplayName + '\'' +
+                    ", \n\tstops=" + stops +
+                    ", \n\tcrowdForecast='" + crowdForecast + '\'' +
+                    "\n\t}";
+        }
     }
 
     public class Stop {
         private String uicCode;
         private String name;
-        private LocalDateTime plannedArrivalDateTime;
-        private LocalDateTime plannedDepartureDateTime; // always timezone offset of 60?
+        private String plannedArrivalDateTime; // Make LocalDateTime type
+        private String plannedDepartureDateTime; // always timezone offset of 60?
+
+        public Stop(String uicCode, String name, String plannedArrivalDateTime, String plannedDepartureDateTime) {
+            this.uicCode = uicCode;
+            this.name = name;
+            this.plannedArrivalDateTime = plannedArrivalDateTime;
+            this.plannedDepartureDateTime = plannedDepartureDateTime;
+        }
+
+        @Override
+        public String toString() {
+            return "\n\t\tStop{" +
+                    "\n\t\tuicCode='" + uicCode + '\'' +
+                    ", \n\t\tname='" + name + '\'' +
+                    ", \n\t\tplannedArrivalDateTime='" + plannedArrivalDateTime + '\'' +
+                    ", \n\t\tplannedDepartureDateTime='" + plannedDepartureDateTime + '\'' +
+                    "\n\t\t}";
+        }
     }
 
     // getTrip from departure to destination using the NS trips API
@@ -103,7 +146,6 @@ public class NSAPI {
                 content.append(inputLine);
             }
             in.close();
-            System.out.println(content);
 
             // Select relevant part of response
             ObjectMapper mapperB = new ObjectMapper();
@@ -111,6 +153,7 @@ public class NSAPI {
 
             // Create trip objects
             List<Trip> trips = nodeToTrips(rootNode);
+
 
 
             connection.disconnect();
@@ -122,20 +165,56 @@ public class NSAPI {
     public List<Trip> nodeToTrips(JsonNode node) {
         List<Trip> trips = new ArrayList<Trip>();
         for (JsonNode n : node.get("trips")) {
-
             String uid = n.get("idx").toString();
             int plannedDurationInMinutes = n.get("plannedDurationInMinutes").intValue();
             int transfers = n.get("transfers").intValue();
             String status = n.get("status").toString();
-            Leg[] legs = new Leg[0];  // = n.get("Legs");
+
+            List<Leg> legs = nodeToLegs(n);
+
             String crowdForecast = n.get("crowdForecast").toString();
             boolean optimal = n.get("optimal").booleanValue();
             Trip t = new Trip(uid, plannedDurationInMinutes, transfers, status, legs, crowdForecast, optimal);
 
+            System.out.println(t);
             trips.add(t);
         }
 
         return trips;
+    }
+
+    public List<Leg> nodeToLegs(JsonNode node) {
+        List<Leg> legs = new ArrayList<Leg>();
+        for (JsonNode n : node.get("legs")) {
+            String idx = n.get("idx").toString();
+            String name = n.get("name").toString();
+            String direction = n.get("direction").toString();
+            String productNumber = n.get("product").get("number").toString(); // Go into product object
+            String productType = n.get("product").get("type").toString(); // Go into product object
+            String productDisplayName = n.get("product").get("displayName").toString();
+
+            List<Stop> stops = nodeToStops(n);
+
+            String crowdForecast = n.get("crowdForecast").toString();
+
+            Leg leg = new Leg(idx, name, direction, productNumber, productType, productDisplayName, stops, crowdForecast);
+            legs.add(leg);
+        }
+        return legs;
+    }
+
+    public List<Stop> nodeToStops(JsonNode node) {
+        List<Stop> stops = new ArrayList<Stop>();
+        for (JsonNode n : node.get("stops")) {
+            String uicCode = n.get("uicCode").toString();
+            String name = n.get("name").toString();
+            String plannedArrivalDateTime = (n.get("plannedArrivalDateTime") != null) ? n.get("plannedArrivalDateTime").toString() : null;
+            String plannedDepartureDateTime = (n.get("plannedDepartureDateTime") != null) ? n.get("plannedDepartureDateTime").toString() : null;
+            Stop stop = new Stop(uicCode, name, plannedArrivalDateTime, plannedDepartureDateTime);
+            stops.add(stop);
+        }
+
+        return stops;
     }
 
 
