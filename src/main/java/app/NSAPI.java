@@ -1,120 +1,19 @@
 package app;
 
+import app.NSObjects.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.io.UnsupportedEncodingException;
-import java.io.DataInputStream;
-import java.io.InputStream;
-import java.io.FileInputStream;
 
 public class NSAPI {
     private String scheme = "https://";
     private String trips_path = "gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips";
-
-    public class Trip {
-        private String uid;
-        private int plannedDurationInMinutes;
-        private int transfers;
-        private String status;
-        private List<Leg> legs;
-        private String crowdForecast;
-        private boolean optimal;
-
-        public Trip(String uid, int plannedDurationInMinutes, int transfers, String status, List<Leg> legs, String crowdForecast, boolean optimal) {
-            this.uid = uid;
-            this.plannedDurationInMinutes = plannedDurationInMinutes;
-            this.status = status;
-            this.legs = legs;
-            this.transfers = transfers;
-            this.crowdForecast = crowdForecast;
-            this.optimal = optimal;
-        }
-
-        @Override
-        public String toString() {
-            return "\nTrip{" +
-                    "\nuid='" + uid + '\'' +
-                    ", \nplannedDurationInMinutes=" + plannedDurationInMinutes +
-                    ", \ntransfers=" + transfers +
-                    ", \nstatus='" + status + '\'' +
-                    ", \nlegs=" + legs +
-                    ", \ncrowdForecast='" + crowdForecast + '\'' +
-                    ", \noptimal=" + optimal +
-                    "\n}";
-        }
-    }
-
-    public class Leg {
-        private String idx;
-        private String name;
-        private String direction;
-        private String productNumber;
-        private String productType;
-        private String productDisplayName;
-        private List<Stop> stops;
-        private String crowdForecast;
-
-        public Leg(String idx, String name, String direction, String productNumber, String productType, String productDisplayName, List<Stop> stops, String crowdForecast) {
-            this.idx = idx;
-            this.name = name;
-            this.direction = direction;
-            this.productNumber = productNumber;
-            this.productType = productType;
-            this.productDisplayName = productDisplayName;
-            this.stops = stops;
-            this.crowdForecast = crowdForecast;
-        }
-
-        @Override
-        public String toString() {
-            return "\n\tLeg{" +
-                    "\n\tidx='" + idx + '\'' +
-                    ", \n\tname='" + name + '\'' +
-                    ", \n\tdirection='" + direction + '\'' +
-                    ", \n\tproductNumber='" + productNumber + '\'' +
-                    ", \n\tproductType='" + productType + '\'' +
-                    ", \n\tproductDisplayName='" + productDisplayName + '\'' +
-                    ", \n\tstops=" + stops +
-                    ", \n\tcrowdForecast='" + crowdForecast + '\'' +
-                    "\n\t}";
-        }
-    }
-
-    public class Stop {
-        private String uicCode;
-        private String name;
-        private String plannedArrivalDateTime; // Make LocalDateTime type
-        private String plannedDepartureDateTime; // always timezone offset of 60?
-
-        public Stop(String uicCode, String name, String plannedArrivalDateTime, String plannedDepartureDateTime) {
-            this.uicCode = uicCode;
-            this.name = name;
-            this.plannedArrivalDateTime = plannedArrivalDateTime;
-            this.plannedDepartureDateTime = plannedDepartureDateTime;
-        }
-
-        @Override
-        public String toString() {
-            return "\n\t\tStop{" +
-                    "\n\t\tuicCode='" + uicCode + '\'' +
-                    ", \n\t\tname='" + name + '\'' +
-                    ", \n\t\tplannedArrivalDateTime='" + plannedArrivalDateTime + '\'' +
-                    ", \n\t\tplannedDepartureDateTime='" + plannedDepartureDateTime + '\'' +
-                    "\n\t\t}";
-        }
-    }
 
     // getTrip from departure to destination using the NS trips API
     public void getTrip(String departure, String destination) {
@@ -187,6 +86,8 @@ public class NSAPI {
         List<Leg> legs = new ArrayList<Leg>();
         for (JsonNode n : node.get("legs")) {
             String idx = n.get("idx").toString();
+            String origin = n.get("origin").get("name").toString();
+            String destination = n.get("destination").get("name").toString();
             String name = n.get("name").toString();
             String direction = n.get("direction").toString();
             String productNumber = n.get("product").get("number").toString(); // Go into product object
@@ -197,7 +98,7 @@ public class NSAPI {
 
             String crowdForecast = n.get("crowdForecast").toString();
 
-            Leg leg = new Leg(idx, name, direction, productNumber, productType, productDisplayName, stops, crowdForecast);
+            Leg leg = new Leg(idx, origin, destination, name, direction, productNumber, productType, productDisplayName, stops, crowdForecast);
             legs.add(leg);
         }
         return legs;

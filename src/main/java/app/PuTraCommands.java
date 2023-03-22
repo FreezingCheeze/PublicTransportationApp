@@ -9,9 +9,8 @@ public class PuTraCommands {
         String departure,
         String destination
     ) {
-        TripTask task = new TripTask();
-        task.setDeparture(departure);
-        task.setDestination(destination);
+        NSAPI api = new NSAPI();
+//        api.getTrip();
 
 
 
