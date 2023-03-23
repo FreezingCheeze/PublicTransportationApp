@@ -15,12 +15,24 @@ public class NSAPI {
     private String scheme = "https://";
     private String trips_path = "gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips";
 
-    // getTrip from departure to destination using the NS trips API
-    public void getTrip(String departure, String destination) {
-        try {
-            // Create query
-            String query = String.format("?fromStation=%s&toStation=%s", departure, destination);
+    public String formatQuery(String departure, String destination, String viaStation, ArrayList<String> vehicles, ArrayList<String> facilities, boolean wheelchair_accessible) {
+        // Mandatory arguments
+        String query = String.format("?fromStation=%s&toStation=%s", departure, destination);
 
+        // Only extend query if argument is given
+        query = (viaStation != null) ? String.format("%s&something=%s", query, viaStation) : query;
+//        query = (vehicles.isEmpty()) ? String.format("%s&something=%s", query, viaStation) : query; // Cannot find how to select for vehicles
+//        query = (facilities.isEmpty()) ? String.format("%s&something=%s", query, viaStation) : query; // Idem for facilities, maybe bathroom->only in trains and silentCompartment->?
+//        query = wheelchair_accessible ? String.format("%s&something=%s", query, viaStation) : query; // Found 'searchForAccessible' but is not for wheelchairs (but for people with autism appearently)
+
+        return query;
+    }
+
+
+    // getTrip from departure to destination using the NS trips API
+    public List<Trip> getTrip(String query) {
+        List<Trip> trips = null;
+        try {
             // Setup connection
             String urlString = scheme + trips_path + query;
             URL url = new URL(urlString);
@@ -51,14 +63,58 @@ public class NSAPI {
             JsonNode rootNode = mapperB.readTree(content.toString());
 
             // Create trip objects
-            List<Trip> trips = nodeToTrips(rootNode);
-
-
+            trips = nodeToTrips(rootNode);
 
             connection.disconnect();
         } catch (Exception ex) {
             System.out.print("exception:" + ex.getMessage());
         }
+        return trips;
+    }
+
+    public List<Trip> getTrip(String departure, String destination, String viaStation, ArrayList<String> vehicles, ArrayList<String> facilities, boolean wheelchair_accessible) {
+        String query = formatQuery(departure, destination, viaStation, vehicles, facilities, wheelchair_accessible);
+        return getTrip(query);
+    }
+
+    public List<Trip> getTrip(String departure, String destination) {
+        String query = formatQuery(departure, destination, null, new ArrayList<>(), new ArrayList<>(), false);
+        return getTrip(query);
+    }
+
+    public List<Trip> getTrip(String departure, String destination, String viaStation) {
+        String query = formatQuery(departure, destination, viaStation, new ArrayList<>(), new ArrayList<>(), false);
+        return getTrip(query);
+    }
+
+    public List<Trip> getTrip(String departure, String destination, String viaStation, ArrayList<String> vehicles) {
+        String query = formatQuery(departure, destination, viaStation, vehicles, new ArrayList<>(), false);
+        return getTrip(query);
+    }
+
+    public List<Trip> getTrip(String departure, String destination, String viaStation, ArrayList<String> vehicles, ArrayList<String> facilities) {
+        String query = formatQuery(departure, destination, viaStation, vehicles, facilities, false);
+        return getTrip(query);
+    }
+
+    public List<Trip> getTrip(String departure, String destination, ArrayList<String> vehicles) {
+        String query = formatQuery(departure, destination, null, vehicles, new ArrayList<>(), false);
+        return getTrip(query);
+    }
+
+    public List<Trip> getTrip(String departure, String destination, ArrayList<String> vehicles, ArrayList<String> facilities) {
+        String query = formatQuery(departure, destination, null, vehicles, facilities, false);
+        return getTrip(query);
+    }
+
+    public List<Trip> getTrip(String departure, String destination, ArrayList<String> vehicles, ArrayList<String> facilities, boolean wheelchair_accessible) {
+        String query = formatQuery(departure, destination, null, vehicles, facilities, wheelchair_accessible);
+        return getTrip(query);
+    }
+
+    public List<Trip> getTrip(String departure, String destination, boolean wheelchair_accessible) {
+        String query = formatQuery(departure, destination, null, new ArrayList<>(), new ArrayList<>(), wheelchair_accessible);
+        return getTrip(query);
     }
 
     public List<Trip> nodeToTrips(JsonNode node) {
@@ -121,6 +177,6 @@ public class NSAPI {
 
     public static void main(String[] args) {
         NSAPI app = new NSAPI();
-        app.getTrip("Enschede", "Utrecht");
+        List<Trip> trips = app.getTrip("Enschede", "Utrecht", null, new ArrayList<>(), new ArrayList<>(), false);
     }
 }
