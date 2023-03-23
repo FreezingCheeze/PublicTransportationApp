@@ -3,7 +3,7 @@ package app;
 import app.NSObjects.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class NSAPI {
     private String scheme = "https://";
     private String trips_path = "gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips";

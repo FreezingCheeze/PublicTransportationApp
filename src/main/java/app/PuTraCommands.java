@@ -23,7 +23,7 @@ public class PuTraCommands {
 //        boolean wheelchair_accessible
     ) {
         NSAPI api = new NSAPI();
-        List<Trip> trips = api.getTrip("Enschede", "Utrecht");
+        List<Trip> trips = api.getTrip();
 
 
 
