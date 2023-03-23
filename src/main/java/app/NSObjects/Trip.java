@@ -1,15 +1,28 @@
 package app.NSObjects;
 
 import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter @Setter
 public class Trip {
+    @Getter @Setter
     private final String uid;
+    @Getter @Setter
     private final int plannedDurationInMinutes;
+    @Getter @Setter
     private final int transfers;
+    @Getter @Setter
     private final String status;
+    @Getter @Setter
     private final List<Leg> legs;
+    @Getter @Setter
     private final String crowdForecast;
+    @Getter @Setter
     private final boolean optimal;
+
+
+
 
     public Trip(String uid, int plannedDurationInMinutes, int transfers, String status, List<Leg> legs, String crowdForecast, boolean optimal) {
         this.uid = uid;

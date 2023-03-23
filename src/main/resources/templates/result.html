@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Queried Trips</title>
+</head>
+<body>
+From <b><span th:text="${departure}"></span></b> to <b><span th:text="${destination}"></span></b>
+<table>
+    <tbody>
+    <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>Duration</th>
+        <th>Number of Transfers</th>
+        <th>Crowd Forecast</th>
+
+    </tr>
+
+    <li th:each="item: ${trip}">
+        <tr>
+            <td th:text="${departure}"></td>
+            <td th:text="${destination}"></td>
+            <td th:text="${item.transfers}"></td>
+            <td th:text="${item.plannedDurationInMinutes}"></td>
+            <td th:text="${item.crowdForecast}"></td>
+        </tr>
+    </li>
+
+
+
+
+
+    </tbody>
+</table>
+</body>
+</html>
