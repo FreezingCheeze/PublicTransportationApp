@@ -8,9 +8,16 @@
     <title>Queried Trips</title>
 </head>
 <body>
-
+<div style="align-items: center; position: sticky; top: 0;">
+    <form action="#" th:action="@{/submit}" method="post">
+    From: <input name="departure" type="text" th:value="${departure}">
+    To: <input name="destination" type="text" th:value="${destination}">
+    Via: <input name="via" type="text" th:value="${via}">
+        <button type="submit" value="submit">Modify Search</button>
+    </form>
+</div>
 <div class="container">
-    From <b><span th:text="${departure}"></span></b> to <b><span th:text="${destination}"></span></b>
+
 <table class="table">
     <tbody>
     <tr>
@@ -43,7 +50,7 @@
             <td th:text="${item.crowdForecast}"></td>
             <td>
             <ul th:each="legs,iterlegs: ${item.legs}" th:if="${iterlegs.index < iterlegs.size-1}">
-            <span th:text="${legs.destination}"></span>
+            <span th:text="${{legs.destination}}"></span>
             </ul>
             </td>
             <td th:text="${item.optimal}"></td>
