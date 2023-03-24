@@ -27,6 +27,7 @@ public class Stop {
     private final Date plannedDepartureDateTime; // always timezone offset of 60?
     private final static SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss'+'z");
     private final static SimpleDateFormat sdf1 = new SimpleDateFormat('"'+"dd-MM-yyyy'T'HH:mm:ss'+'z" + '"');
+
     public Stop(String uicCode, String name, String plannedArrivalDateTime, String plannedDepartureDateTime) throws ParseException {
         this.uicCode = uicCode;
         this.name = name;

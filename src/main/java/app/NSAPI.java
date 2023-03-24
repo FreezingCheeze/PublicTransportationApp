@@ -109,10 +109,10 @@ public class NSAPI {
             URL url = new URL(urlString);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+
             //Request headers
             connection.setRequestProperty("Cache-Control", "no-cache");
             connection.setRequestProperty("Ocp-Apim-Subscription-Key", "719f331db2dc42feb5e8781c34cd5711");
-
 
             // Get response from API
             int status = connection.getResponseCode();

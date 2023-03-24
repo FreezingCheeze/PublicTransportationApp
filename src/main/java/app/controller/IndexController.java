@@ -18,9 +18,8 @@ import java.io.IOException;
 @Controller
 public class IndexController{
     @Autowired private NSAPI nsapi;
+
     @GetMapping("/")
-
-
     public String showInput(Model model) {
         return "echo-form";
     }
