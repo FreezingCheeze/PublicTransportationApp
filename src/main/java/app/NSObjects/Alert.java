@@ -1,7 +1,5 @@
-import app.NSAPI;
-import app.NSObjects.Arrival;
-import app.NSObjects.Leg;
-import app.NSObjects.Trip;
+package app.NSObjects;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
