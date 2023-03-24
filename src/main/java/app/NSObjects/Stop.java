@@ -1,16 +1,52 @@
 package app.NSObjects;
-
+import java.text.*;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 public class Stop {
     private final String uicCode;
-    private final String name;
-    private final String plannedArrivalDateTime; // Make LocalDateTime type
-    private final String plannedDepartureDateTime; // always timezone offset of 60?
 
-    public Stop(String uicCode, String name, String plannedArrivalDateTime, String plannedDepartureDateTime) {
+    public String getUicCode() {
+        return uicCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Date getPlannedArrivalDateTime() {
+        return plannedArrivalDateTime;
+    }
+
+    public Date getPlannedDepartureDateTime() {
+        return plannedDepartureDateTime;
+    }
+
+    private final String name;
+    private final Date plannedArrivalDateTime; // Make LocalDateTime type
+    private final Date plannedDepartureDateTime; // always timezone offset of 60?
+    private final static SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss'+'z");
+    private final static SimpleDateFormat sdf1 = new SimpleDateFormat('"'+"dd-MM-yyyy'T'HH:mm:ss'+'z" + '"');
+    public Stop(String uicCode, String name, String plannedArrivalDateTime, String plannedDepartureDateTime) throws ParseException {
         this.uicCode = uicCode;
         this.name = name;
-        this.plannedArrivalDateTime = plannedArrivalDateTime;
-        this.plannedDepartureDateTime = plannedDepartureDateTime;
+        if(plannedArrivalDateTime.charAt(0)=='"') {
+            this.plannedArrivalDateTime = Date.from(Instant.parse(plannedArrivalDateTime.substring(1, 20) + "Z"));
+        }
+        else {
+            this.plannedArrivalDateTime = Date.from(Instant.parse(plannedArrivalDateTime.substring(0, 19) + "Z"));
+        }
+        if(plannedDepartureDateTime.charAt(0)=='"'){
+            this.plannedDepartureDateTime = Date.from(Instant.parse(plannedDepartureDateTime.substring(1,20)+"Z"));
+
+        }
+        else{
+            this.plannedDepartureDateTime = Date.from(Instant.parse(plannedDepartureDateTime.substring(0,19)+"Z"));
+
+        }
+
+
+
     }
 
     @Override

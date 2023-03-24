@@ -21,7 +21,8 @@ public class Trip {
     @Getter @Setter
     private final boolean optimal;
 
-
+    @Getter @Setter
+    private Double fare;
 
 
     public Trip(String uid, int plannedDurationInMinutes, int transfers, String status, List<Leg> legs, String crowdForecast, boolean optimal) {
@@ -32,6 +33,7 @@ public class Trip {
         this.transfers = transfers;
         this.crowdForecast = crowdForecast;
         this.optimal = optimal;
+
     }
 
     @Override
