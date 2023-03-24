@@ -24,12 +24,18 @@ public class IndexController{
         return "echo-form";
     }
 
-    @RequestMapping(value = "/submit", method= RequestMethod.POST)
-    public String processForm(Model model, @ModelAttribute(value="departure") String dep,@ModelAttribute(value="destination") String dest) throws IOException, EncodeException {
+
+    @RequestMapping(value="/submit", method = RequestMethod.POST)
+    public String processForm(Model model, @ModelAttribute(value="departure") String dep,@ModelAttribute(value="destination") String dest, @ModelAttribute(value="via") String via) throws IOException, EncodeException{
+        if(via.length()>0){
+            nsapi.setViaStation(via);
+        }
+        else{
+            nsapi.setViaStation(null);
+        }
         nsapi.setDeparture(dep);
         nsapi.setDestination(dest);
         model.addAttribute("trip",nsapi.getTrip());
-
         return "result";
     }
 

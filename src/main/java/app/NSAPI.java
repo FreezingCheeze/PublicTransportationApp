@@ -88,7 +88,7 @@ public class NSAPI {
         String query = String.format("?fromStation=%s&toStation=%s", departure, destination);
 
         // Only extend query if argument is given
-        query = (viaStation != null) ? String.format("%s&something=%s", query, viaStation) : query;
+        query = (viaStation != null) ? String.format("%s&viaStation=%s", query, viaStation) : query;
 //        query = (vehicles.isEmpty()) ? String.format("%s&something=%s", query, viaStation) : query; // Cannot find how to select for vehicles
 //        query = (facilities.isEmpty()) ? String.format("%s&something=%s", query, viaStation) : query; // Idem for facilities, maybe bathroom->only in trains and silentCompartment->?
 //        query = wheelchair_accessible ? String.format("%s&something=%s", query, viaStation) : query; // Found 'searchForAccessible' but is not for wheelchairs (but for people with autism appearently)
@@ -174,7 +174,9 @@ public class NSAPI {
         for (JsonNode n : node.get("legs")) {
             String idx = n.get("idx").toString();
             String origin = n.get("origin").get("name").toString();
+            origin = origin.substring(1,origin.length()-1);
             String destination = n.get("destination").get("name").toString();
+            destination = destination.substring(1,destination.length()-1);
             String name = n.get("name").toString();
             String direction = n.get("direction").toString();
             String productNumber = n.get("product").get("number").toString(); // Go into product object
