@@ -42,7 +42,7 @@
             <td th:text="${item.transfers}"></td>
             <td th:text="${item.crowdForecast}"></td>
             <td>
-            <ul th:each="legs: ${item.legs}">
+            <ul th:each="legs,iterlegs: ${item.legs}" th:if="${iterlegs.index < iterlegs.size-1}">
             <span th:text="${legs.destination}"></span>
             </ul>
             </td>
