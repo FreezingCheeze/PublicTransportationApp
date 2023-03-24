@@ -198,6 +198,7 @@ public class NSAPI {
 
     public static void main(String[] args) {
         NSAPI app = new NSAPI();
+
         List<Trip> trips = app.getTrip();
     }
 }
