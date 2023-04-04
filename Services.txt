@@ -1,0 +1,31 @@
+Services
+
+`- Calculate trip
+- Add stop
+- Add filters
+- Showcost
+- Buyticket
+- Alert ASYNC
+- Feedback ASYNC
+- Save trip
+- Share trip
+- show location ASYNC
+
+
+
+TODO:
+- Split NS API into
+-- NSAPI
+-- TRIP service
+-- LEG service
+-- STOP service
+
+- Add
+-- ALERT service
+--- Implement MQ
+-- ARRIVAL service
+-- CALCULATE COST service
+-- BUY TICKET service
+
+
+-- FEEDBACK service
