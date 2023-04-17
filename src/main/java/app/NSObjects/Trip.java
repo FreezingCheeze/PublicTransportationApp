@@ -1,8 +1,9 @@
 package app.NSObjects;
 
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter @Setter
 public class Trip {
@@ -22,10 +23,14 @@ public class Trip {
     private final boolean optimal;
 
     @Getter @Setter
+    private final int idx;
+
+    @Getter @Setter
     private Double fare;
 
 
-    public Trip(String uid, int plannedDurationInMinutes, int transfers, String status, List<Leg> legs, String crowdForecast, boolean optimal) {
+    public Trip(int idx,String uid, int plannedDurationInMinutes, int transfers, String status, List<Leg> legs, String crowdForecast, boolean optimal) {
+        this.idx = idx;
         this.uid = uid;
         this.plannedDurationInMinutes = plannedDurationInMinutes;
         this.status = status;
@@ -47,5 +52,37 @@ public class Trip {
                 ", \ncrowdForecast='" + crowdForecast + '\'' +
                 ", \noptimal=" + optimal +
                 "\n}";
+    }
+
+    public String getArrivalTime(){
+        return legs.get(legs.size()-1).getArrivalTime();
+    }
+
+    public String getDepTime() {
+        return legs.get(0).getDepTime();
+    }
+
+    public String getVia(){
+
+        String via = "";
+        if (legs.size()==1){
+           return via;
+        }
+        else{
+            for(int i=0;i<legs.size()-1;i++){
+                Leg l = legs.get(i);
+                via = via + l.getDestination() + ", ";
+
+            }
+            return via;
+        }
+    }
+
+    public String getOrigin(){
+        return legs.get(0).getOrigin();
+    }
+
+    public String getDestination(){
+        return legs.get(legs.size()-1).getDestination();
     }
 }

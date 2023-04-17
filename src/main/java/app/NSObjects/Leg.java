@@ -123,4 +123,12 @@ public class Leg {
                 ", \n\tcrowdForecast='" + crowdForecast + '\'' +
                 "\n\t}";
     }
+
+    public String getArrivalTime(){
+        return stops.get(stops.size()-1).getPlannedArrivalDateTime().toString();
+    }
+
+    public String getDepTime(){
+        return stops.get(0).getPlannedDepartureDateTime().toString();
+    }
 }
