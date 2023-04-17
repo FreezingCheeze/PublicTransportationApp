@@ -21,6 +21,7 @@
 <table class="table">
     <tbody>
     <tr>
+        <th>TripID</th>
         <th>From</th>
         <th>To</th>
         <th>Duration(In minutes)</th>
@@ -29,6 +30,7 @@
         <th>Number of Transfers</th>
         <th>Crowd Forecast</th>
         <th>Via</th>
+        <th>LegIDs</th>
         <th>Is optimal?</th>
 
 
@@ -36,6 +38,7 @@
 
     <ul th:each="item: ${trip}">
         <tr>
+            <td th:text="${item.uid}"/>
             <td th:text="${departure}"></td>
             <td th:text="${destination}"></td>
             <td th:text="${item.plannedDurationInMinutes}"></td>
@@ -48,11 +51,13 @@
             </ul>
             <td th:text="${item.transfers}"></td>
             <td th:text="${item.crowdForecast}"></td>
-            <td>
+
             <ul th:each="legs,iterlegs: ${item.legs}" th:if="${iterlegs.index < iterlegs.size-1}">
-            <span th:text="${{legs.destination}}"></span>
+                <td>
+                    <span th:text="${{legs.destination}}"></span></td>
+                <td><span th:text="${legs.idx}"></span></td>
             </ul>
-            </td>
+
             <td th:text="${item.optimal}"></td>
 
         </tr>

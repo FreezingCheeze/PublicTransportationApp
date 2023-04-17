@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 public class Stop {
-    private final String uicCode;
+    private String uicCode;
 
     public String getUicCode() {
         return uicCode;
@@ -22,11 +22,15 @@ public class Stop {
         return plannedDepartureDateTime;
     }
 
-    private final String name;
-    private final Date plannedArrivalDateTime; // Make LocalDateTime type
-    private final Date plannedDepartureDateTime; // always timezone offset of 60?
+    private String name;
+    private Date plannedArrivalDateTime; // Make LocalDateTime type
+    private Date plannedDepartureDateTime; // always timezone offset of 60?
     private final static SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm:ss'+'z");
     private final static SimpleDateFormat sdf1 = new SimpleDateFormat('"'+"dd-MM-yyyy'T'HH:mm:ss'+'z" + '"');
+
+    public Stop() {
+
+    }
 
     public Stop(String uicCode, String name, String plannedArrivalDateTime, String plannedDepartureDateTime) throws ParseException {
         this.uicCode = uicCode;
