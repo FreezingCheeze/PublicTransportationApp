@@ -1,22 +1,23 @@
 package app;
 
-import app.NSObjects.*;
+import app.NSObjects.Leg;
+import app.NSObjects.Stop;
+import app.NSObjects.Trip;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class NSAPI {
@@ -156,6 +157,7 @@ public class NSAPI {
         RestTemplate restTemplate = new RestTemplate();
 
         for (JsonNode n : node.get("trips")) {
+            int idx = n.get("idx").intValue();
             String uid = n.get("uid").toString();
             int plannedDurationInMinutes = n.get("plannedDurationInMinutes").intValue();
             int transfers = n.get("transfers").intValue();
@@ -166,7 +168,7 @@ public class NSAPI {
             String crowdForecast = n.get("crowdForecast").toString();
             //Integer fares = n.get("fares").get("priceInCents").intValue();
             boolean optimal = n.get("optimal").booleanValue();
-            Trip t = new Trip(uid, plannedDurationInMinutes, transfers, status, legs, crowdForecast, optimal);
+            Trip t = new Trip(idx,uid, plannedDurationInMinutes, transfers, status, legs, crowdForecast, optimal);
             //HttpEntity<Trip> request = new HttpEntity<>(t);
 
             System.out.println(t);

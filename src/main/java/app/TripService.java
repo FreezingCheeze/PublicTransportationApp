@@ -1,13 +1,8 @@
 package app;
-import app.NSObjects.Trip;
 
+import app.NSObjects.Trip;
 import lombok.Getter;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +25,10 @@ public class TripService {
 
     public void clearTrip(){
         TripList = new ArrayList<>();
+    }
+
+    public Trip getTripbyidx(int idx){
+        return TripList.stream().filter(item -> item.getIdx() == idx).findFirst().orElse(null);
     }
 
 
