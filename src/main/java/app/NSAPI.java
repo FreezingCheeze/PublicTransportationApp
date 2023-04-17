@@ -3,16 +3,20 @@ package app;
 import app.NSObjects.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class NSAPI {
@@ -98,10 +102,10 @@ public class NSAPI {
 
 
     // getTrip from departure to destination using the NS trips API
-    public List<Trip> getTrip() {
+    public void getTrip() {
         String query = this.formatQuery();
 
-        List<Trip> trips = null;
+       List<Trip> trips = null;
         try {
             // Setup connection
             String urlString = scheme + trips_path + query;
@@ -142,15 +146,17 @@ public class NSAPI {
             ex.printStackTrace();
 
         }
-        return trips;
+
     }
 
 
 
     public List<Trip> nodeToTrips(JsonNode node) throws ParseException {
         List<Trip> trips = new ArrayList<Trip>();
+        RestTemplate restTemplate = new RestTemplate();
+
         for (JsonNode n : node.get("trips")) {
-            String uid = n.get("idx").toString();
+            String uid = n.get("uid").toString();
             int plannedDurationInMinutes = n.get("plannedDurationInMinutes").intValue();
             int transfers = n.get("transfers").intValue();
             String status = n.get("status").toString();
@@ -161,8 +167,10 @@ public class NSAPI {
             //Integer fares = n.get("fares").get("priceInCents").intValue();
             boolean optimal = n.get("optimal").booleanValue();
             Trip t = new Trip(uid, plannedDurationInMinutes, transfers, status, legs, crowdForecast, optimal);
+            //HttpEntity<Trip> request = new HttpEntity<>(t);
 
             System.out.println(t);
+            ResponseEntity<?> response = restTemplate.postForEntity("http://localhost:8080/addTrip", t,Void.class);
             trips.add(t);
         }
 
@@ -172,7 +180,7 @@ public class NSAPI {
     public List<Leg> nodeToLegs(JsonNode node) throws ParseException{
         List<Leg> legs = new ArrayList<Leg>();
         for (JsonNode n : node.get("legs")) {
-            String idx = n.get("idx").toString();
+            String idx = n.get("journeyDetailRef").toString();
             String origin = n.get("origin").get("name").toString();
             origin = origin.substring(1,origin.length()-1);
             String destination = n.get("destination").get("name").toString();
@@ -215,6 +223,6 @@ public class NSAPI {
         NSAPI app = new NSAPI();
         app.setDeparture("Enschede");
         app.setDestination("Utrecht");
-        List<Trip> trips = app.getTrip();
+        //List<Trip> trips = app.getTrip();
     }
 }
