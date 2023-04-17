@@ -1,6 +1,8 @@
 package app.controller;
+import app.NSObjects.Alert;
 import app.NSObjects.Trip;
 import app.TripService;
+import app.alertClient.Subscriber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +12,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
 import app.NSAPI;
 
+import javax.jms.JMSException;
 import javax.validation.Valid;
 import javax.websocket.EncodeException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -21,6 +26,8 @@ import java.io.IOException;
 public class IndexController{
     @Autowired private NSAPI nsapi;
     @Autowired private TripService ts;
+    @Autowired private Subscriber sub;
+    private int ID = 0;
 
     @GetMapping("/")
     public String showInput(Model model) {
@@ -49,6 +56,27 @@ public class IndexController{
         ts.addTrip(trip);
         System.out.println("Success");
         return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value="/alert",  method = RequestMethod.POST)
+    public String receiveAlerts(Model model, @ModelAttribute(value="code") String code) throws JMSException {
+        if (sub.getClientId() != "0") {
+            sub.create("0", code);
+        }
+
+        String alertString = sub.getAlerts();
+        String[] alertProp = alertString.split("\n");
+
+        List<Alert> alerts = new ArrayList<Alert>();
+        if (alertProp.length > 1) {
+            Alert alert = new Alert(alertProp[0], alertProp[1], alertProp[2], alertProp[3]);
+            alerts.add(alert);
+        }
+        System.out.println(alertString);
+
+
+        model.addAttribute("alerts", alerts);
+        return "alert";
     }
 
 }

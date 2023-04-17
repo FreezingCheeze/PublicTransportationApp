@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<div class="container">
+    <table class="table">
+        <tbody>
+
+        <tr>
+            <th>Origin</th>
+            <th>Name</th>
+            <th>Arrival time</th>
+            <th>Track</th>
+        </tr>
+
+        <ul th:each="item: ${alerts}">
+            <tr>
+                <td th:text="${item.origin}"/>
+                <td th:text="${item.name}"></td>
+                <td th:text="${item.arrivalTime}"></td>
+                <td th:text="${item.track}"></td>
+            </tr>
+        </ul>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

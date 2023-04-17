@@ -13,5 +13,10 @@
 
     <button type="submit" value="submit">Find trips</button>
 </form>
+<h2>Receive alerts</h2>
+<form action="#" th:action="@{/alert}" method="post">
+    Station code: <input name="code" type="text"><br />
+    <button type="submit" value="alert">Receive alerts</button>
+</form>
 </body>
 </html>

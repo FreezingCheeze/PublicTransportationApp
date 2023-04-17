@@ -13,7 +13,9 @@ import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Subscriber {
 
     private static final Logger LOGGER =
@@ -23,6 +25,10 @@ public class Subscriber {
     private String clientId;
     private Connection connection;
     private MessageConsumer messageConsumer;
+
+    public String getClientId() {
+        return clientId;
+    }
 
     public void create(String clientId, String topicName)
             throws JMSException {
@@ -54,12 +60,12 @@ public class Subscriber {
         connection.close();
     }
 
-    public String getGreeting(int timeout) throws JMSException {
+    public String getAlerts() throws JMSException {
 
         String text = "No message";
         // read a message from the topic destination
 
-        Message message = messageConsumer.receive(timeout);
+        Message message = messageConsumer.receive(5000);
 
         // check if a message was received
         if (message != null) {
