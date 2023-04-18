@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import app.NSAPI;
 
 import javax.jms.JMSException;
 import javax.validation.Valid;
@@ -20,8 +21,6 @@ import java.util.List;
 
 
 @Controller
-
-
 public class IndexController{
     @Autowired private NSAPI nsapi;
     @Autowired private TripService ts;
