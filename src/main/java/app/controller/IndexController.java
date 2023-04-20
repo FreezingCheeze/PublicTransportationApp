@@ -57,7 +57,7 @@ public class IndexController{
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value="/alert",  method = RequestMethod.POST)
+    @RequestMapping(value="/",  method = RequestMethod.POST)
     public String receiveAlerts(Model model, @ModelAttribute(value="code") String code) throws JMSException {
         if (sub.getClientId() != "0") {
             sub.create("0", code);
@@ -75,7 +75,12 @@ public class IndexController{
 
 
         model.addAttribute("alerts", alerts);
-        return "alert";
+        return "echo-form";
+    }
+
+    @GetMapping(value="/Alerts")
+    public String showAlerts(){
+        return "save-result";
     }
 
     @PostMapping("/saveTrip/{id}")
@@ -87,7 +92,7 @@ public class IndexController{
         String via = t.getVia();
         String arr_time = t.getArrivalTime();
         String dep_time = t.getDepTime();
-        tr.save(new TripExp(uid,origin,dest,via,arr_time,dep_time));
+        tr.save(new TripExp(uid,origin,dest,via,dep_time,arr_time));
         System.out.println("Saved Trip");
         model.addAttribute("trip",ts.getTripList());
         return "result";
