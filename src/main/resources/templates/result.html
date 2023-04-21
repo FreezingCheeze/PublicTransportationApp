@@ -53,12 +53,13 @@
             </ul>
             <td th:text="${item.transfers}"></td>
             <td th:text="${item.crowdForecast}"></td>
-
+            <td>
             <ul th:each="legs,iterlegs: ${item.legs}" th:if="${iterlegs.index < iterlegs.size-1}">
-                <td>
-                    <span th:text="${{legs.destination}}"></span></td>
+
+                    <span th:text="${{legs.destination}}"></span>
 
             </ul>
+            </td>
 
             <td th:text="${item.optimal}"></td>
             <td><form action="#" th:action="@{/saveTrip/{idx}(idx=${item.idx})}" method="post"><button type="submit" value="submit">Save Trip</button></form></td>
