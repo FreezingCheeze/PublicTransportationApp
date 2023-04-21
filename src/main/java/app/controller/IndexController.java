@@ -1,4 +1,6 @@
 package app.controller;
+
+import app.NSAPI;
 import app.NSObjects.Alert;
 import app.NSObjects.Trip;
 import app.NSObjects.TripExp;
@@ -10,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import app.NSAPI;
 
 import javax.jms.JMSException;
 import javax.validation.Valid;
@@ -63,6 +64,12 @@ public class IndexController{
             sub.create("0", code);
         }
 
+
+        return "echo-form";
+    }
+
+    @GetMapping(value="/Alerts")
+    public String showAlerts(Model model) throws JMSException{
         String alertString = sub.getAlerts();
         String[] alertProp = alertString.split("\n");
 
@@ -75,11 +82,6 @@ public class IndexController{
 
 
         model.addAttribute("alerts", alerts);
-        return "echo-form";
-    }
-
-    @GetMapping(value="/Alerts")
-    public String showAlerts(){
         return "alert";
     }
 
