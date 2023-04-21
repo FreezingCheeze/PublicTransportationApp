@@ -80,7 +80,7 @@ public class IndexController{
 
     @GetMapping(value="/Alerts")
     public String showAlerts(){
-        return "save-result";
+        return "alert";
     }
 
     @PostMapping("/saveTrip/{id}")
